@@ -11,3 +11,7 @@ export type ChessTile = {
   id: string;
   chessPiece: ChessPiece | null;
 };
+
+export type ChessTileWithColor = ChessTile & {
+  color: ChessColor;
+};
