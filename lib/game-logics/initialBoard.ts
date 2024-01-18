@@ -7,7 +7,7 @@ const createBoard = (): ChessTile[][] => {
 
   rows.forEach((_, rowIdx) => {
     const col = Array.from({ length: 8 }).fill({
-      id: `${rowIdx}`,
+      id: `${rowIdx} `,
       chessPiece: null,
     }) as ChessTile[];
     board.push(col.map((item, colIdx) => ({ ...item, id: item.id + colIdx })));
