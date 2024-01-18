@@ -19,6 +19,10 @@ export abstract class ChessPiece {
   getColor(): ChessColor {
     return this.color;
   }
+
+  getImageUrl(): string {
+    return this.imageUrl;
+  }
 }
 
 /**
