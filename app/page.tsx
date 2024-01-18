@@ -1,5 +1,4 @@
 import { ChessBoard } from '@/components/chess-board';
-import { initialBoard } from '@/lib/game-logics/initialBoard';
 export default function Home() {
   return (
     <main>
