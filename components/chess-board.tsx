@@ -10,14 +10,13 @@ export const ChessBoard = () => {
 
   return (
     <div className="grid grid-cols-8 grid-flow-row border-2 border-black w-[800px] h-[800px]">
-      {board.map((row, rowIdx) => {
-        const isOdd = (rowIdx + 1) % 2 !== 0;
-        return row.map((tile, tileIdx) => (
+      {board.map((row) => {
+        return row.map((tile) => (
           <div
             key={tile.id}
             className={cn(
               'border-2 border-black w-[100px] h-[100px] bg-opacity-70',
-              `bg-${tile.color}`
+              tile.color && `bg-${tile.color}`
             )}
           >
             {tile.chessPiece && (
@@ -26,6 +25,7 @@ export const ChessBoard = () => {
                 width={100}
                 height={100}
                 alt="king"
+                className=" object-cover"
               />
             )}
           </div>
