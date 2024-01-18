@@ -16,7 +16,10 @@ export const ChessBoard = () => {
             key={tile.id}
             className={cn(
               'border-2 border-black w-[100px] h-[100px] bg-opacity-70',
-              tile.color && `bg-${tile.color}`
+              {
+                'bg-black': tile.color == 'black',
+                'bg-white': tile.color == 'white',
+              }
             )}
           >
             {tile.chessPiece && (
