@@ -1,24 +1,11 @@
-import Image from 'next/image';
-
+import { ChessBoard } from '@/components/chess-board';
+import { initialBoard } from '@/lib/game-logics/initialBoard';
 export default function Home() {
   return (
     <main>
-      <h1>Images:</h1>
-      <div className="flex flex-col bg-white">
-        <Image
-          src="/black-king.png"
-          width={50}
-          height={50}
-          alt="black-king"
-          className="h-[150px] w-[150px]"
-        />
-        <Image src="/white-king.png" width={50} height={50} alt="white-king" />
-        <Image
-          src="/black-queen.png"
-          width={50}
-          height={50}
-          alt="black-queen"
-        />
+      <div className="flex flex-col items-center justify-center w-full h-full">
+        <h1>ChessGame</h1>
+        <ChessBoard initialBoard={initialBoard} />
       </div>
     </main>
   );
