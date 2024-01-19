@@ -1,4 +1,9 @@
-import { Bishop, ChessPiece, King, Knight, Pawn, Queen, Rook } from '.';
+import { Bishop } from './classes/bishop';
+import { King } from './classes/king';
+import { Knight } from './classes/knight';
+import { Pawn } from './classes/pawn';
+import { Queen } from './classes/queen';
+import { Rook } from './classes/rook';
 import { ChessTileWithColor } from './types';
 
 export const insertPiece = (tile: ChessTileWithColor) => {

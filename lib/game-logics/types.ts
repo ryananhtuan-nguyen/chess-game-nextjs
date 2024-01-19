@@ -1,4 +1,4 @@
-import { ChessPiece } from '.';
+import { ChessPiece } from './classes';
 
 export type Point = {
   x: number;

@@ -2,7 +2,12 @@
 import { initialBoard } from '@/lib/game-logics/initialBoard';
 import { ChessTileWithColor } from '@/lib/game-logics/types';
 import { cn } from '@/lib/utils';
-import { DragDropContext, Draggable, Droppable } from '@hello-pangea/dnd';
+import {
+  DragDropContext,
+  DragStart,
+  Draggable,
+  Droppable,
+} from '@hello-pangea/dnd';
 import Image from 'next/image';
 import React from 'react';
 import { useState } from 'react';
@@ -32,18 +37,33 @@ export const ChessBoard = () => {
         return { ...tile, isCurrentPossible: false };
       })
     );
-    // console.log(
-    //   board[5][0],
-    //   board[5][1],
-    //   board[5][2],
-    //   board[5][3],
-    //   board[5][4]
-    // );
+    setBoard(newBoard);
+  };
+
+  const handleDragStart = (e: DragStart) => {
+    //get chess piece id
+    const { draggableId } = e;
+    const [x, y] = draggableId.split(' ').map(Number);
+    const currentPiece = board[x][y].chessPiece;
+    if (!currentPiece) return;
+    const possibleMoves = currentPiece.validMoves({ x, y }, board);
+    console.log(possibleMoves);
+    const newBoard = board.map((item) =>
+      item.map((tile) => {
+        if (currentAvailable(tile.id, possibleMoves)) {
+          return { ...tile, isCurrentPossible: true };
+        }
+        return { ...tile, isCurrentPossible: false };
+      })
+    );
     setBoard(newBoard);
   };
 
   return (
-    <DragDropContext onDragEnd={(e) => console.log(e)}>
+    <DragDropContext
+      onDragEnd={(e) => console.log(e)}
+      onDragStart={handleDragStart}
+    >
       <div className="grid grid-cols-8 grid-flow-row border-2 border-black w-[800px] h-[800px]">
         <React.Fragment>
           {board.map((row) => {
