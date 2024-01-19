@@ -1,5 +1,5 @@
 import { insertPiece } from './helper';
-import { ChessColor, ChessTile, ChessTileWithColor } from './types';
+import { ChessTile, ChessTileWithColor } from './types';
 
 const createBoard = (): ChessTile[][] => {
   const rows = Array.from({ length: 8 }).fill('');
