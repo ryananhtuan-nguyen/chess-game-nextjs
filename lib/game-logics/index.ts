@@ -23,6 +23,10 @@ export abstract class ChessPiece {
   getImageUrl(): string {
     return this.imageUrl;
   }
+  abstract validMoves(
+    currentCoord: Point,
+    currentBoard: ChessTile[][]
+  ): number[][];
 }
 
 /**
@@ -227,17 +231,19 @@ export class Pawn extends ChessPiece {
 
   validMoves(currentCoord: Point, currentBoard: ChessTile[][]) {
     const { x, y } = currentCoord;
-    const allPossibleMove = [
-      [x - 1, y - 1],
-      [x, y - 1],
-      [x + 1, y - 1],
-      [x - 1, y],
-      [x + 1, y],
-      [x - 1, y + 1],
-      [x, y + 1],
-      [x + 1, y + 1],
-    ];
-
+    const allPossibleMove =
+      this.color == 'white'
+        ? [
+            // [x - 1, y - 1],
+            [x - 1, y],
+            // [x + 1, y - 1],
+          ]
+        : [
+            // [x - 1, y + 1],
+            [x, y + 1],
+            // [x + 1, y + 1],
+          ];
+    return allPossibleMove;
     const result = allPossibleMove.filter(([newX, newY]) => {
       return (
         newX >= 0 &&
