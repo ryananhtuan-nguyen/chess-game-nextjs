@@ -96,12 +96,3 @@ function checkCurrent(
 ): number[] | undefined {
   return currentCheck.find((item) => item[0] == x && item[1] == y);
 }
-
-export const currentAvailable = (id: string, availableMoves: number[][]) => {
-  let [x, y] = id.split(' ').map(Number);
-  availableMoves.forEach(([moveX, moveY]) => {
-    if (moveX == x && moveY == y) return true;
-  });
-
-  return false;
-};
