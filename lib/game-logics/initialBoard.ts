@@ -1,4 +1,3 @@
-import { Knight, Rook } from '.';
 import { insertPiece } from './helper';
 import { ChessColor, ChessTile, ChessTileWithColor } from './types';
 
