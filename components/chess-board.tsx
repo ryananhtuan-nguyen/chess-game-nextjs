@@ -67,7 +67,6 @@ export const ChessBoard = () => {
                       'bg-green-500 bg-opacity-80': tile.isCurrentPossible,
                     })}
                   >
-                    <p className="z-[9999] top-0">{tile.id}</p>
                     {tile.chessPiece && (
                       <Draggable draggableId={tile.id} index={0}>
                         {(provided1) => (
