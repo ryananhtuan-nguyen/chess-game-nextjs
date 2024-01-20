@@ -22,25 +22,25 @@ export class Knight extends ChessPiece {
 
   validMoves(currentCoord: Point, currentBoard: ChessTile[][]) {
     const { x, y } = currentCoord;
-    const allPossibleMove = [
-      [x - 1, y - 1],
-      [x, y - 1],
-      [x + 1, y - 1],
-      [x - 1, y],
-      [x + 1, y],
-      [x - 1, y + 1],
-      [x, y + 1],
-      [x + 1, y + 1],
+    const currentColor = this.color;
+
+    const allPossibleMoves = [
+      [x - 2, y - 1],
+      [x - 2, y + 1],
+      [x - 1, y + 2],
+      [x - 1, y - 2],
+      [x + 2, y - 1],
+      [x + 2, y + 1],
     ];
 
-    const result = allPossibleMove.filter(([newX, newY]) => {
+    const result = allPossibleMoves.filter(([newX, newY]) => {
       return (
         newX >= 0 &&
         newY >= 0 &&
         newX < currentBoard.length &&
         newY < currentBoard[0].length &&
         (!currentBoard[newX][newY].chessPiece ||
-          currentBoard[newX][newY].chessPiece?.getColor() !== this.color)
+          currentBoard[newX][newY].chessPiece?.getColor() !== currentColor)
       );
     });
 
