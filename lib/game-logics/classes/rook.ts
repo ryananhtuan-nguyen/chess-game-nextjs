@@ -1,4 +1,5 @@
 import { ChessPiece } from '.';
+import { checkPieceMoveAvailable } from '../helper';
 import { ChessColor, ChessTile, Point } from '../types';
 
 /**
@@ -21,28 +22,29 @@ export class Rook extends ChessPiece {
 
   validMoves(currentCoord: Point, currentBoard: ChessTile[][]) {
     const { x, y } = currentCoord;
+    const currentColor = this.color;
+    const eachLine = Array.from({ length: 8 }).fill([x, y]) as number[][];
+
+    //topVer, bottomVer, left, right, topleftDiag, bottomleftDiag, toprightDiag, bottomRightDiag
+
+    //Top
+    const top = eachLine.map(([x, y], index) => [x - index, y]);
+
+    //Bottom
+    const bottom = eachLine.map(([x, y], index) => [x + index, y]);
+
+    //Left
+    const left = eachLine.map(([x, y], index) => [x, y - index]);
+
+    //Right
+    const right = eachLine.map(([x, y], index) => [x, y + index]);
+
     const allPossibleMove = [
-      [x - 1, y - 1],
-      [x, y - 1],
-      [x + 1, y - 1],
-      [x - 1, y],
-      [x + 1, y],
-      [x - 1, y + 1],
-      [x, y + 1],
-      [x + 1, y + 1],
+      ...checkPieceMoveAvailable(top.slice(1), currentBoard, currentColor),
+      ...checkPieceMoveAvailable(bottom.slice(1), currentBoard, currentColor),
+      ...checkPieceMoveAvailable(left.slice(1), currentBoard, currentColor),
+      ...checkPieceMoveAvailable(right.slice(1), currentBoard, currentColor),
     ];
-
-    const result = allPossibleMove.filter(([newX, newY]) => {
-      return (
-        newX >= 0 &&
-        newY >= 0 &&
-        newX < currentBoard.length &&
-        newY < currentBoard[0].length &&
-        (!currentBoard[newX][newY].chessPiece ||
-          currentBoard[newX][newY].chessPiece?.getColor() !== this.color)
-      );
-    });
-
-    return result;
+    return allPossibleMove;
   }
 }
