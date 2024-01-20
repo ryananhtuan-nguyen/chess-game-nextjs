@@ -5,6 +5,7 @@ import { Pawn } from './classes/pawn';
 import { Queen } from './classes/queen';
 import { Rook } from './classes/rook';
 import { ChessTileWithColor } from './types';
+import type { ChessColor, ChessTile, Point } from './types';
 
 export const insertPiece = (tile: ChessTileWithColor) => {
   const [currentX, currentY] = tile.id.split(' ').map(Number);
@@ -85,12 +86,12 @@ export const insertPiece = (tile: ChessTileWithColor) => {
     };
 
   //Pawn pos
-  const isPawn = checkCurrent([currentX, currentY], pawnPos);
-  if (isPawn)
-    return {
-      ...tile,
-      chessPiece: new Pawn(color, { x: currentX, y: currentY }),
-    };
+  // const isPawn = checkCurrent([currentX, currentY], pawnPos);
+  // if (isPawn)
+  //   return {
+  //     ...tile,
+  //     chessPiece: new Pawn(color, { x: currentX, y: currentY }),
+  //   };
   //default
   return tile;
 };
@@ -100,4 +101,55 @@ function checkCurrent(
   currentCheck: number[][]
 ): number[] | undefined {
   return currentCheck.find((item) => item[0] == x && item[1] == y);
+}
+
+export function checkPieceMoveAvailable(
+  lineMove: number[][],
+  currentBoard: ChessTile[][],
+  currentColor: ChessColor
+) {
+  //filter out of bound tiles
+  console.log('CURRENT MOVES', lineMove);
+
+  const tilesInBoard = lineMove.filter(([newX, newY]) => {
+    return (
+      newX >= 0 &&
+      newY >= 0 &&
+      newX < currentBoard.length &&
+      newY < currentBoard[0].length
+    );
+  });
+
+  //preparing result
+  let result = [] as number[][];
+
+  //checking conditions
+  for (let i = 0; i < tilesInBoard.length; i++) {
+    const [currentX, currentY] = tilesInBoard[i];
+    const currentTile = currentBoard[currentX][currentY];
+
+    //empty tile
+    if (!currentTile.chessPiece) {
+      result.push(tilesInBoard[i]);
+
+      //enemies tile
+    } else if (
+      currentTile.chessPiece &&
+      currentTile.chessPiece.getColor() !== currentColor
+    ) {
+      console.log('Shit happened');
+      result.push(tilesInBoard[i]);
+      break;
+
+      //same color piece
+    } else if (
+      currentTile.chessPiece &&
+      currentTile.chessPiece.getColor() == currentColor
+    ) {
+      console.log('Shit 2 happened');
+      break;
+    }
+  }
+
+  return result;
 }
