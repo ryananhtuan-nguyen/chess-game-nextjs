@@ -1,4 +1,5 @@
 import { ChessPiece } from '.';
+import { checkPieceMoveAvailable } from '../helper';
 import { ChessColor, ChessTile, Point } from '../types';
 
 /**
@@ -21,28 +22,57 @@ export class Bishop extends ChessPiece {
 
   validMoves(currentCoord: Point, currentBoard: ChessTile[][]) {
     const { x, y } = currentCoord;
+    const currentColor = this.color;
+
+    //corner
+    const eachLine = Array.from({ length: 8 }).fill([x, y]) as number[][];
+
+    //top left, top right, bottom left, bottom right
+
+    //Top Left Diagonal
+    const topLeftDiag = eachLine.map(([x, y], index) => [x - index, y - index]);
+
+    //Bottom Left Diagonal
+    const bottomLeftDiag = eachLine.map(([x, y], index) => [
+      x + index,
+      y - index,
+    ]);
+
+    //Top Right Diag
+    const topRightDiag = eachLine.map(([x, y], index) => [
+      x - index,
+      y + index,
+    ]);
+
+    //Bottom Right
+    const bottomRightDiag = eachLine.map(([x, y], index) => [
+      x + index,
+      y + index,
+    ]);
+
     const allPossibleMove = [
-      [x - 1, y - 1],
-      [x, y - 1],
-      [x + 1, y - 1],
-      [x - 1, y],
-      [x + 1, y],
-      [x - 1, y + 1],
-      [x, y + 1],
-      [x + 1, y + 1],
+      ...checkPieceMoveAvailable(
+        topLeftDiag.slice(1),
+        currentBoard,
+        currentColor
+      ),
+      ...checkPieceMoveAvailable(
+        bottomLeftDiag.slice(1),
+        currentBoard,
+        currentColor
+      ),
+      ...checkPieceMoveAvailable(
+        topRightDiag.slice(1),
+        currentBoard,
+        currentColor
+      ),
+      ...checkPieceMoveAvailable(
+        bottomRightDiag.slice(1),
+        currentBoard,
+        currentColor
+      ),
     ];
 
-    const result = allPossibleMove.filter(([newX, newY]) => {
-      return (
-        newX >= 0 &&
-        newY >= 0 &&
-        newX < currentBoard.length &&
-        newY < currentBoard[0].length &&
-        (!currentBoard[newX][newY].chessPiece ||
-          currentBoard[newX][newY].chessPiece?.getColor() !== this.color)
-      );
-    });
-
-    return result;
+    return allPossibleMove;
   }
 }
