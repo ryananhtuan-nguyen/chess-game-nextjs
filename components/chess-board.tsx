@@ -23,30 +23,18 @@ export const ChessBoard = () => {
     )
   );
 
-  const handleClick = (tile: ChessTileWithColor) => {
-    if (!tile.chessPiece) return;
-    const currentPiece = tile.chessPiece;
-    const [x, y] = tile.id.split(' ').map(Number);
-    const possibleMoves = currentPiece.validMoves({ x, y }, board);
-    console.log(possibleMoves);
-    const newBoard = board.map((item) =>
-      item.map((tile) => {
-        if (currentAvailable(tile.id, possibleMoves)) {
-          return { ...tile, isCurrentPossible: true };
-        }
-        return { ...tile, isCurrentPossible: false };
-      })
-    );
-    setBoard(newBoard);
-  };
-
   const handleDragStart = (e: DragStart) => {
     //get chess piece id
     const { draggableId } = e;
     const [x, y] = draggableId.split(' ').map(Number);
     const currentPiece = board[x][y].chessPiece;
+    console.log('🚀 ~ handleDragStart ~ currentPiece:', currentPiece);
     if (!currentPiece) return;
-    const possibleMoves = currentPiece.validMoves({ x, y }, board);
+
+    const possibleMoves = currentPiece.validMoves(
+      currentPiece.getCoordinate(),
+      board
+    );
     console.log(possibleMoves);
     const newBoard = board.map((item) =>
       item.map((tile) => {
@@ -62,7 +50,7 @@ export const ChessBoard = () => {
   return (
     <DragDropContext
       onDragEnd={(e) => console.log(e)}
-      onDragStart={handleDragStart}
+      onBeforeDragStart={handleDragStart}
     >
       <div className="grid grid-cols-8 grid-flow-row border-2 border-black w-[800px] h-[800px]">
         <React.Fragment>
@@ -79,6 +67,7 @@ export const ChessBoard = () => {
                       'bg-green-500 bg-opacity-80': tile.isCurrentPossible,
                     })}
                   >
+                    <p className="z-[9999] top-0">{tile.id}</p>
                     {tile.chessPiece && (
                       <Draggable draggableId={tile.id} index={0}>
                         {(provided1) => (
@@ -88,7 +77,6 @@ export const ChessBoard = () => {
                                 ? tile.chessPiece.getImageUrl()
                                 : ''
                             }
-                            onClick={() => handleClick(tile)}
                             width={100}
                             height={100}
                             alt="king"
