@@ -1,7 +1,8 @@
 'use client';
 import { ChessPiece } from '@/lib/game-logics/classes';
+import { createNewPiece } from '@/lib/game-logics/helper';
 import { initialBoard } from '@/lib/game-logics/initialBoard';
-import { ChessTileWithColor } from '@/lib/game-logics/types';
+import { ChessColor, ChessTileWithColor } from '@/lib/game-logics/types';
 import { Dispatch, createContext, useContext, useReducer } from 'react';
 
 export interface BoardUI extends ChessTileWithColor {
@@ -20,6 +21,15 @@ type Action =
         currentTileId: string;
         destinationId: string;
         currentBoard: BoardUI[][];
+      };
+    }
+  | {
+      type: 'pawn_evolve';
+      payload: {
+        newRole: string;
+        currentBoard: BoardUI[][];
+        currentId: string;
+        color: ChessColor;
       };
     };
 
@@ -55,10 +65,12 @@ const appReducer = (state: BoardUI[][] = initialState, action: Action) => {
       //get new id
       const [newX, newY] = action.payload.destinationId.split(' ').map(Number);
       //change piece coord
-      action.payload.currentPiece.setCoordinate(
+      console.log('Changing cord', newX, newY);
+      const newPiece = action.payload.currentPiece.setCoordinate(
         { x: newX, y: newY },
         action.payload.currentBoard
       );
+      console.log('Changed coord', action.payload.currentPiece.getCoordinate());
       //new state
       return state.map((item) =>
         item.map((tile) => {
@@ -72,14 +84,42 @@ const appReducer = (state: BoardUI[][] = initialState, action: Action) => {
           }
           // move chess piece to new tile
           if (tile.id == action.payload.destinationId) {
+            console.log({
+              ...tile,
+              chessPiece: newPiece,
+              isCurrentPossible: false,
+            });
             return {
               ...tile,
-              chessPiece: action.payload.currentPiece,
+              chessPiece: newPiece,
               isCurrentPossible: false,
             };
           }
           //not moving, but un-highlight tile
           return { ...tile, isCurrentPossible: false };
+        })
+      );
+    }
+    case 'pawn_evolve': {
+      const [currentX, currentY] = action.payload.currentId
+        .split(' ')
+        .map(Number);
+
+      //remove pawn
+      action.payload.currentBoard[currentX][currentY].chessPiece = null;
+
+      const newPiece = createNewPiece(
+        action.payload.newRole,
+        { x: currentX, y: currentY },
+        action.payload.color
+      );
+      //set new State
+      return action.payload.currentBoard.map((item) =>
+        item.map((tile) => {
+          if (tile.id === action.payload.currentId) {
+            return { ...tile, chessPiece: newPiece };
+          }
+          return tile;
         })
       );
     }
