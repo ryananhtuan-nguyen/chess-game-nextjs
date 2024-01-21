@@ -15,3 +15,11 @@ export type ChessTile = {
 export type ChessTileWithColor = ChessTile & {
   color: ChessColor;
 };
+
+export type ChessPieceType =
+  | 'king'
+  | 'queen'
+  | 'rook'
+  | 'knight'
+  | 'bishop'
+  | 'pawn';
