@@ -40,7 +40,6 @@ export const ChessBoard = () => {
   const handleDragEnd = (e: DropResult) => {
     const { draggableId, destination } = e;
     //no destination
-    // console.log('1- Check destination', destination, destination?.droppableId);
     if (!destination || !destination.droppableId) return;
 
     const [x, y] = draggableId.split(' ').map(Number);
@@ -49,15 +48,12 @@ export const ChessBoard = () => {
     const [destX, destY] = destinationId.split(' ').map(Number);
 
     //no current chess piece
-    // console.log('2- Check current chess Piece');
     if (!currentPiece || currentPiece.getColor() !== turn.current) return;
 
     //same destination
-    // console.log('3- Check same destination');
     if (draggableId == destination.droppableId) return;
 
     //check valid Moves
-    // console.log('4- Check Valid Moves');
     const possibleMoves = currentPiece.validMoves(board);
     const isValidMove = possibleMoves.some(
       (item) => item[0] == destX && item[1] == destY
@@ -71,9 +67,6 @@ export const ChessBoard = () => {
     if (destinationPiece && destinationPiece.getRole() == 'king') {
       setGameOver(true);
     }
-    // console.log('continue');
-
-    // console.log('5- Move valid, check pawn');
 
     //check pawn evolving
     let isPawnEvolving = false;
