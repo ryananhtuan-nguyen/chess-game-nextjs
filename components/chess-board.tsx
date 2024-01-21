@@ -1,57 +1,77 @@
 'use client';
-import { initialBoard } from '@/lib/game-logics/initialBoard';
-import { ChessTileWithColor } from '@/lib/game-logics/types';
+import { useAppState } from '@/hooks/state-provider';
 import { cn } from '@/lib/utils';
 import {
   DragDropContext,
   DragStart,
   Draggable,
+  DropResult,
   Droppable,
 } from '@hello-pangea/dnd';
 import Image from 'next/image';
 import React from 'react';
-import { useState } from 'react';
-
-interface BoardUI extends ChessTileWithColor {
-  isCurrentPossible: boolean;
-}
 
 export const ChessBoard = () => {
-  const [board, setBoard] = useState<BoardUI[][]>(
-    initialBoard.map((item) =>
-      item.map((tile) => ({ ...tile, isCurrentPossible: false }))
-    )
-  );
+  const { dispatch, state: board } = useAppState();
 
+  //Handle drag start: high-light all possible moves
   const handleDragStart = (e: DragStart) => {
-    //get chess piece id
     const { draggableId } = e;
     const [x, y] = draggableId.split(' ').map(Number);
     const currentPiece = board[x][y].chessPiece;
-    console.log('🚀 ~ handleDragStart ~ currentPiece:', currentPiece);
+    if (!currentPiece) return;
+    dispatch({
+      type: 'check_valid_moves',
+      payload: { currentPiece, currentBoard: board },
+    });
+  };
+
+  //Handle drag end:
+
+  const handleDragEnd = (e: DropResult) => {
+    const { draggableId, destination } = e;
+    //no destination
+    console.log('Check destination');
+    if (!destination || !destination.droppableId) return;
+
+    const [x, y] = draggableId.split(' ').map(Number);
+    const currentPiece = board[x][y].chessPiece;
+    const destinationId = destination.droppableId;
+    const [destX, destY] = destinationId.split(' ').map(Number);
+
+    //no current chess piece
+    console.log('check current piece');
     if (!currentPiece) return;
 
-    const possibleMoves = currentPiece.validMoves(
-      currentPiece.getCoordinate(),
-      board
+    //same destination
+    console.log('check same place');
+    if (draggableId == destination.droppableId) return;
+
+    //check valid Moves
+    const possibleMoves = currentPiece.validMoves(board);
+    console.log('🚀 ~ handleDragEnd ~ possibleMoves:', possibleMoves);
+    const isValidMove = possibleMoves.some(
+      (item) => item[0] == destX && item[1] == destY
     );
-    console.log(possibleMoves);
-    const newBoard = board.map((item) =>
-      item.map((tile) => {
-        if (currentAvailable(tile.id, possibleMoves)) {
-          return { ...tile, isCurrentPossible: true };
-        }
-        return { ...tile, isCurrentPossible: false };
-      })
-    );
-    setBoard(newBoard);
+    console.log('🚀 ~ handleDragEnd ~ isValidMove:', isValidMove);
+
+    if (!isValidMove) return;
+
+    //if the move is valid
+    console.log('Valid move');
+    dispatch({
+      type: 'move_chesspiece',
+      payload: {
+        currentPiece,
+        currentTileId: draggableId,
+        destinationId,
+        currentBoard: board,
+      },
+    });
   };
 
   return (
-    <DragDropContext
-      onDragEnd={(e) => console.log(e)}
-      onBeforeDragStart={handleDragStart}
-    >
+    <DragDropContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
       <div className="grid grid-cols-8 grid-flow-row border-2 border-black w-[800px] h-[800px]">
         <React.Fragment>
           {board.map((row) => {
