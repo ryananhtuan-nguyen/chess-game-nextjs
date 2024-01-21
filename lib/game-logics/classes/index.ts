@@ -26,7 +26,13 @@ export abstract class ChessPiece {
 
   abstract validMoves(currentBoard: ChessTile[][]): number[][];
 
-  setCoordinate({ x, y }: Point) {
-    this.coordinate = { x, y };
+  setCoordinate(cord: Point, currentBoard: ChessTile[][]) {
+    const validMoves = this.validMoves(currentBoard);
+    const { x, y } = cord;
+    const isValid = validMoves.some((item) => item[0] == x && item[1] == y);
+
+    if (isValid) {
+      this.coordinate = cord;
+    }
   }
 }
