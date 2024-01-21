@@ -100,7 +100,6 @@ export const ChessBoard = () => {
   };
 
   const handleClick = (item: string) => {
-    console.log('NEW ID', lastMove);
     dispatch({
       type: 'pawn_evolve',
       payload: {
