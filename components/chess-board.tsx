@@ -28,6 +28,7 @@ export const ChessBoard = () => {
     const [x, y] = draggableId.split(' ').map(Number);
     const currentPiece = board[x][y].chessPiece;
     if (!currentPiece) return;
+    if (currentPiece.getColor() !== turn.current) return;
     dispatch({
       type: 'check_valid_moves',
       payload: { currentPiece, currentBoard: board },
