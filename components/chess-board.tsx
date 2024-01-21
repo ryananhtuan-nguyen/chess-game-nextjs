@@ -1,7 +1,7 @@
 'use client';
 import { useAppState } from '@/hooks/state-provider';
-import { ChessColor } from '@/lib/game-logics/types';
-import { cn } from '@/lib/utils';
+import { ChessColor, Point } from '@/lib/game-logics/types';
+import { PawnEvolveOptions, cn } from '@/lib/utils';
 import {
   DragDropContext,
   DragStart,
@@ -11,12 +11,17 @@ import {
 } from '@hello-pangea/dnd';
 import Image from 'next/image';
 import React, { useRef, useState } from 'react';
+import { Dialog } from './ui/dialog';
+import { DialogContent } from '@radix-ui/react-dialog';
+import { Button } from './ui/button';
 
 export const ChessBoard = () => {
   const { dispatch, state: board } = useAppState();
-  const turn = useRef<ChessColor>('white');
   const [gameOver, setGameOver] = useState(false);
-
+  const [pawnEvolving, setPawnEvolving] = useState(false);
+  //ref
+  const turn = useRef<ChessColor>('white');
+  const lastMove = useRef<string>('');
   //Handle drag start: high-light all possible moves
   const handleDragStart = (e: DragStart) => {
     const { draggableId } = e;
@@ -34,7 +39,7 @@ export const ChessBoard = () => {
   const handleDragEnd = (e: DropResult) => {
     const { draggableId, destination } = e;
     //no destination
-    console.log('Check destination');
+    // console.log('1- Check destination', destination, destination?.droppableId);
     if (!destination || !destination.droppableId) return;
 
     const [x, y] = draggableId.split(' ').map(Number);
@@ -43,12 +48,15 @@ export const ChessBoard = () => {
     const [destX, destY] = destinationId.split(' ').map(Number);
 
     //no current chess piece
+    // console.log('2- Check current chess Piece');
     if (!currentPiece || currentPiece.getColor() !== turn.current) return;
 
     //same destination
+    // console.log('3- Check same destination');
     if (draggableId == destination.droppableId) return;
 
     //check valid Moves
+    // console.log('4- Check Valid Moves');
     const possibleMoves = currentPiece.validMoves(board);
     const isValidMove = possibleMoves.some(
       (item) => item[0] == destX && item[1] == destY
@@ -57,12 +65,22 @@ export const ChessBoard = () => {
     if (!isValidMove) return;
 
     //if the move is valid
-    console.log('Valid move');
+
     const destinationPiece = board[destX][destY].chessPiece;
     if (destinationPiece && destinationPiece.getRole() == 'king') {
       setGameOver(true);
     }
-    console.log('continue');
+    // console.log('continue');
+
+    // console.log('5- Move valid, check pawn');
+
+    //check pawn evolving
+    let isPawnEvolving = false;
+    if (currentPiece.getRole() == 'pawn' && (destX == 0 || destX == 7)) {
+      isPawnEvolving = true;
+      lastMove.current = destinationId;
+      setPawnEvolving(isPawnEvolving);
+    }
     //game continue
     dispatch({
       type: 'move_chesspiece',
@@ -73,7 +91,27 @@ export const ChessBoard = () => {
         currentBoard: board,
       },
     });
-    turn.current = turn.current === 'white' ? 'black' : 'white';
+
+    //pawn is not evolving or done evolving
+    if (!isPawnEvolving) {
+      turn.current = turn.current === 'white' ? 'black' : 'white';
+    }
+  };
+
+  const handleClick = (item: string) => {
+    console.log('NEW ID', lastMove);
+    dispatch({
+      type: 'pawn_evolve',
+      payload: {
+        newRole: item,
+        currentBoard: board,
+        currentId: lastMove.current,
+        color: turn.current,
+      },
+    });
+    turn.current = turn.current == 'black' ? 'white' : 'black';
+    lastMove.current = '';
+    setPawnEvolving(false);
   };
 
   return (
@@ -100,23 +138,42 @@ export const ChessBoard = () => {
                           }
                         )}
                       >
-                        {tile.chessPiece && (
+                        {tile.chessPiece !== null && (
                           <Draggable draggableId={tile.id} index={0}>
                             {(provided1) => (
-                              <Image
-                                src={
-                                  tile.chessPiece
-                                    ? tile.chessPiece.getImageUrl()
-                                    : ''
-                                }
-                                width={100}
-                                height={100}
-                                alt="king"
-                                className=" object-cover rounded-lg"
-                                ref={provided1.innerRef}
-                                {...provided1.draggableProps}
-                                {...provided1.dragHandleProps}
-                              />
+                              <>
+                                <Image
+                                  src={
+                                    tile.chessPiece
+                                      ? tile.chessPiece.getImageUrl()
+                                      : ''
+                                  }
+                                  width={100}
+                                  height={100}
+                                  alt="king"
+                                  className=" object-cover rounded-lg"
+                                  ref={provided1.innerRef}
+                                  {...provided1.draggableProps}
+                                  {...provided1.dragHandleProps}
+                                />
+                                <Dialog open={pawnEvolving}>
+                                  <div className="absolute top-[220px] left-[150px]">
+                                    <DialogContent>
+                                      <div className="flex flex-col justify-center items-center gap-4">
+                                        <h3>Choose from</h3>
+                                        {PawnEvolveOptions.map((item) => (
+                                          <Button
+                                            key={item}
+                                            onClick={() => handleClick(item)}
+                                          >
+                                            {item.toUpperCase()}
+                                          </Button>
+                                        ))}
+                                      </div>
+                                    </DialogContent>
+                                  </div>
+                                </Dialog>
+                              </>
                             )}
                           </Draggable>
                         )}
