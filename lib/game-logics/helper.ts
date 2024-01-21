@@ -162,9 +162,14 @@ export function checkPawnMove(
 ) {
   const { x, y } = currentCord;
   const result = [] as number[][];
+
   switch (currentColor) {
     case 'white': {
-      if (!currentBoard[x - 1][y].chessPiece && x - 1 >= 0) {
+      if (x - 1 < 0) {
+        return [];
+      }
+      const nextMove = currentBoard[x - 1][y];
+      if (nextMove && !nextMove.chessPiece && x - 1 >= 0) {
         result.push([x - 1, y]);
       }
 
@@ -195,7 +200,11 @@ export function checkPawnMove(
       break;
     }
     case 'black': {
-      if (!currentBoard[x + 1][y].chessPiece && x + 1 < 8) {
+      if (x + 1 > 7) {
+        return [];
+      }
+      const nextMove = currentBoard[x + 1][y];
+      if (nextMove && !nextMove.chessPiece && x + 1 < 8) {
         result.push([x + 1, y]);
       }
 
