@@ -20,8 +20,8 @@ export class Bishop extends ChessPiece {
     super(color, 'bishop', imageUrl, coordinate);
   }
 
-  validMoves(currentCoord: Point, currentBoard: ChessTile[][]) {
-    const { x, y } = currentCoord;
+  validMoves(currentBoard: ChessTile[][]) {
+    const { x, y } = this.coordinate;
     const currentColor = this.color;
 
     //corner

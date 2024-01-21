@@ -20,8 +20,8 @@ export class King extends ChessPiece {
     super(color, 'king', imageUrl, coordinate);
   }
 
-  validMoves(currentCoord: Point, currentBoard: ChessTile[][]) {
-    const { x, y } = currentCoord;
+  validMoves(currentBoard: ChessTile[][]) {
+    const { x, y } = this.coordinate;
     const allPossibleMove = [
       [x - 1, y - 1],
       [x, y - 1],

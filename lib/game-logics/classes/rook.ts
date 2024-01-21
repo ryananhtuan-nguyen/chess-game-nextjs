@@ -20,8 +20,8 @@ export class Rook extends ChessPiece {
     super(color, 'rook', imageUrl, coordinate);
   }
 
-  validMoves(currentCoord: Point, currentBoard: ChessTile[][]) {
-    const { x, y } = currentCoord;
+  validMoves(currentBoard: ChessTile[][]) {
+    const { x, y } = this.coordinate;
     const currentColor = this.color;
     const eachLine = Array.from({ length: 8 }).fill([x, y]) as number[][];
 

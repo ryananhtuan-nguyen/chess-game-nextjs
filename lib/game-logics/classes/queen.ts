@@ -20,8 +20,8 @@ export class Queen extends ChessPiece {
     super(color, 'queen', imageUrl, coordinate);
   }
 
-  validMoves(currentCoord: Point, currentBoard: ChessTile[][]) {
-    const { x, y } = currentCoord;
+  validMoves(currentBoard: ChessTile[][]) {
+    const { x, y } = this.coordinate;
     const currentColor = this.color;
 
     //assuming its in the corner to capture all available moves

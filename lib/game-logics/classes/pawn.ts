@@ -20,9 +20,9 @@ export class Pawn extends ChessPiece {
     super(color, 'pawn', imageUrl, coordinate);
   }
 
-  validMoves(currentCoord: Point, currentBoard: ChessTile[][]) {
+  validMoves(currentBoard: ChessTile[][]) {
     const currentColor = this.color;
-    const result = checkPawnMove(currentColor, currentCoord, currentBoard);
+    const result = checkPawnMove(currentColor, this.coordinate, currentBoard);
 
     return result;
   }
