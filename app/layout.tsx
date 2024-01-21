@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { cn } from '@/lib/utils';
+import AppStateProvider from '@/hooks/state-provider';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -17,7 +18,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={cn('bg-slate-500', inter.className)}>{children}</body>
+      <body className={cn('bg-slate-500', inter.className)}>
+        <AppStateProvider>{children}</AppStateProvider>
+      </body>
     </html>
   );
 }
