@@ -86,12 +86,13 @@ export const insertPiece = (tile: ChessTileWithColor) => {
     };
 
   //Pawn pos
-  // const isPawn = checkCurrent([currentX, currentY], pawnPos);
-  // if (isPawn)
-  //   return {
-  //     ...tile,
-  //     chessPiece: new Pawn(color, { x: currentX, y: currentY }),
-  //   };
+  const isPawn = checkCurrent([currentX, currentY], pawnPos);
+  if (isPawn)
+    return {
+      ...tile,
+      chessPiece: new Pawn(color, { x: currentX, y: currentY }),
+    };
+
   //default
   return tile;
 };
