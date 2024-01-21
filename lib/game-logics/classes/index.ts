@@ -1,4 +1,4 @@
-import { ChessColor, ChessTile, Point } from '../types';
+import { ChessColor, ChessPieceType, ChessTile, Point } from '../types';
 
 /**
  * Base-class for each chesspiece
@@ -7,10 +7,14 @@ import { ChessColor, ChessTile, Point } from '../types';
 export abstract class ChessPiece {
   constructor(
     protected color: ChessColor,
-    protected role: string,
+    protected role: ChessPieceType,
     protected imageUrl: string,
     protected coordinate: Point
   ) {}
+
+  getRole(): ChessPieceType {
+    return this.role;
+  }
 
   getCoordinate(): Point {
     return this.coordinate;
