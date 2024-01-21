@@ -1,4 +1,5 @@
 import { ChessPiece } from '.';
+import { checkPawnMove } from '../helper';
 import { ChessColor, ChessTile, Point } from '../types';
 
 /**
@@ -20,30 +21,8 @@ export class Pawn extends ChessPiece {
   }
 
   validMoves(currentCoord: Point, currentBoard: ChessTile[][]) {
-    const { x, y } = currentCoord;
-    const allPossibleMove =
-      this.color == 'white'
-        ? [
-            // [x - 1, y - 1],
-            [x - 1, y],
-            // [x + 1, y - 1],
-          ]
-        : [
-            // [x - 1, y + 1],
-            [x, y + 1],
-            // [x + 1, y + 1],
-          ];
-    return allPossibleMove;
-    const result = allPossibleMove.filter(([newX, newY]) => {
-      return (
-        newX >= 0 &&
-        newY >= 0 &&
-        newX < currentBoard.length &&
-        newY < currentBoard[0].length &&
-        (!currentBoard[newX][newY].chessPiece ||
-          currentBoard[newX][newY].chessPiece?.getColor() !== this.color)
-      );
-    });
+    const currentColor = this.color;
+    const result = checkPawnMove(currentColor, currentCoord, currentBoard);
 
     return result;
   }
