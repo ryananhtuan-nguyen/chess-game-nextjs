@@ -117,7 +117,7 @@ export const ChessBoard = () => {
   return (
     <DragDropContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
       {!gameOver && (
-        <div className="hidden sm:flex justify-center items-center min-h-screen">
+        <div className="hidden sm:flex justify-center items-center min-h-[90vh]">
           <div className="sm:grid grid-cols-8 grid-flow-row border-2 border-black">
             <React.Fragment>
               {board.map((row) => {
