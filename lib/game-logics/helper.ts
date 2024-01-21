@@ -138,7 +138,7 @@ export function checkPieceMoveAvailable(
       currentTile.chessPiece &&
       currentTile.chessPiece.getColor() !== currentColor
     ) {
-      console.log('Shit happened');
+      console.log('No shit happened, edible');
       result.push(tilesInBoard[i]);
       break;
 
@@ -147,7 +147,7 @@ export function checkPieceMoveAvailable(
       currentTile.chessPiece &&
       currentTile.chessPiece.getColor() == currentColor
     ) {
-      console.log('Shit 2 happened');
+      console.log('Shit happened, same color');
       break;
     }
   }
@@ -237,4 +237,19 @@ export function checkPawnMove(
   }
 
   return result;
+}
+
+export function createNewPiece(role: string, coord: Point, color: ChessColor) {
+  switch (role) {
+    case 'queen':
+      return new Queen(color, coord);
+    case 'bishop':
+      return new Bishop(color, coord);
+    case 'rook':
+      return new Rook(color, coord);
+    case 'knight':
+      return new Knight(color, coord);
+    default:
+      throw new Error('Invalid role');
+  }
 }
