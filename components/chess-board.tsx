@@ -79,51 +79,55 @@ export const ChessBoard = () => {
   return (
     <DragDropContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
       {!gameOver && (
-        <div className="grid grid-cols-8 grid-flow-row border-2 border-black w-[800px] h-[800px]">
-          <React.Fragment>
-            {board.map((row) => {
-              return row.map((tile) => (
-                <Droppable droppableId={tile.id} key={tile.id}>
-                  {(provided) => (
-                    <div
-                      {...provided.droppableProps}
-                      ref={provided.innerRef}
-                      className={cn(
-                        'border-2 border-black w-[100px] h-[100px]',
-                        {
-                          'bg-black bg-opacity-40': tile.color == 'black',
-                          'bg-white': tile.color == 'white',
-                          'bg-green-500 bg-opacity-80': tile.isCurrentPossible,
-                        }
-                      )}
-                    >
-                      {tile.chessPiece && (
-                        <Draggable draggableId={tile.id} index={0}>
-                          {(provided1) => (
-                            <Image
-                              src={
-                                tile.chessPiece
-                                  ? tile.chessPiece.getImageUrl()
-                                  : ''
-                              }
-                              width={100}
-                              height={100}
-                              alt="king"
-                              className=" object-cover rounded-lg"
-                              ref={provided1.innerRef}
-                              {...provided1.draggableProps}
-                              {...provided1.dragHandleProps}
-                            />
-                          )}
-                        </Draggable>
-                      )}
-                      {provided.placeholder}
-                    </div>
-                  )}
-                </Droppable>
-              ));
-            })}
-          </React.Fragment>
+        <div className="hidden sm:flex justify-center items-center min-h-screen">
+          <div className="sm:grid grid-cols-8 grid-flow-row border-2 border-black">
+            <React.Fragment>
+              {board.map((row) => {
+                return row.map((tile) => (
+                  <Droppable droppableId={tile.id} key={tile.id}>
+                    {(provided) => (
+                      <div
+                        {...provided.droppableProps}
+                        ref={provided.innerRef}
+                        className={cn(
+                          'border-2 border-black w-[100px] h-[100px]',
+                          'w-10 h-10 sm:w-16 sm:h-16 lg:w-20 lg:h-20',
+                          {
+                            'bg-black bg-opacity-40': tile.color == 'black',
+                            'bg-white': tile.color == 'white',
+                            'bg-green-500 bg-opacity-80':
+                              tile.isCurrentPossible,
+                          }
+                        )}
+                      >
+                        {tile.chessPiece && (
+                          <Draggable draggableId={tile.id} index={0}>
+                            {(provided1) => (
+                              <Image
+                                src={
+                                  tile.chessPiece
+                                    ? tile.chessPiece.getImageUrl()
+                                    : ''
+                                }
+                                width={100}
+                                height={100}
+                                alt="king"
+                                className=" object-cover rounded-lg"
+                                ref={provided1.innerRef}
+                                {...provided1.draggableProps}
+                                {...provided1.dragHandleProps}
+                              />
+                            )}
+                          </Draggable>
+                        )}
+                        {provided.placeholder}
+                      </div>
+                    )}
+                  </Droppable>
+                ));
+              })}
+            </React.Fragment>
+          </div>
         </div>
       )}
       {gameOver && (
