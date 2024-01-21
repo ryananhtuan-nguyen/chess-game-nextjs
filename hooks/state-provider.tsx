@@ -66,6 +66,10 @@ const appReducer = (state: BoardUI[][] = initialState, action: Action) => {
           if (tile.id == action.payload.currentTileId) {
             return { ...tile, chessPiece: null, isCurrentPossible: false };
           }
+          //remove destination if there is something
+          if (state[newX][newY].chessPiece) {
+            state[newX][newY].chessPiece = null;
+          }
           // move chess piece to new tile
           if (tile.id == action.payload.destinationId) {
             return {
