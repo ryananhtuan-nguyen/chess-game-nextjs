@@ -23,8 +23,10 @@ export abstract class ChessPiece {
   getImageUrl(): string {
     return this.imageUrl;
   }
-  abstract validMoves(
-    currentCoord: Point,
-    currentBoard: ChessTile[][]
-  ): number[][];
+
+  abstract validMoves(currentBoard: ChessTile[][]): number[][];
+
+  setCoordinate({ x, y }: Point) {
+    this.coordinate = { x, y };
+  }
 }
