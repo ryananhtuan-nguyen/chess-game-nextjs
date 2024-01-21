@@ -1,6 +1,6 @@
 'use client';
 import { useAppState } from '@/hooks/state-provider';
-import { ChessColor, Point } from '@/lib/game-logics/types';
+import { ChessColor } from '@/lib/game-logics/types';
 import { PawnEvolveOptions, cn } from '@/lib/utils';
 import {
   DragDropContext,
@@ -9,11 +9,11 @@ import {
   DropResult,
   Droppable,
 } from '@hello-pangea/dnd';
+import { DialogContent } from '@radix-ui/react-dialog';
 import Image from 'next/image';
 import React, { useRef, useState } from 'react';
-import { Dialog } from './ui/dialog';
-import { DialogContent } from '@radix-ui/react-dialog';
 import { Button } from './ui/button';
+import { Dialog } from './ui/dialog';
 
 export const ChessBoard = () => {
   const { dispatch, state: board } = useAppState();
