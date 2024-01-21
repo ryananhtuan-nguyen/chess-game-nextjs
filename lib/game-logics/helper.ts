@@ -154,3 +154,78 @@ export function checkPieceMoveAvailable(
 
   return result;
 }
+
+export function checkPawnMove(
+  currentColor: ChessColor,
+  currentCord: Point,
+  currentBoard: ChessTile[][]
+) {
+  const { x, y } = currentCord;
+  const result = [] as number[][];
+  switch (currentColor) {
+    case 'white': {
+      if (!currentBoard[x - 1][y].chessPiece && x - 1 >= 0) {
+        result.push([x - 1, y]);
+      }
+
+      //check for enemies
+      const leftTop = currentBoard[x - 1][y - 1];
+      const rightTop = currentBoard[x - 1][y + 1];
+
+      if (
+        leftTop &&
+        leftTop.chessPiece &&
+        leftTop.chessPiece.getColor() !== currentColor
+      ) {
+        result.push([x - 1, y - 1]);
+      }
+      if (
+        rightTop &&
+        rightTop.chessPiece &&
+        rightTop.chessPiece.getColor() !== currentColor
+      ) {
+        result.push([x - 1, y + 1]);
+      }
+
+      //check for starting point
+      if (x == 6 && !currentBoard[x - 2][y].chessPiece) {
+        result.push([x - 2, y]);
+      }
+
+      break;
+    }
+    case 'black': {
+      if (!currentBoard[x + 1][y].chessPiece && x + 1 < 8) {
+        result.push([x + 1, y]);
+      }
+
+      //check enemies
+      const leftBot = currentBoard[x + 1][y - 1];
+      const rightBot = currentBoard[x + 1][y + 1];
+
+      if (
+        leftBot &&
+        leftBot.chessPiece &&
+        leftBot.chessPiece.getColor() !== currentColor
+      ) {
+        result.push([x + 1, y - 1]);
+      }
+
+      if (
+        rightBot &&
+        rightBot.chessPiece &&
+        rightBot.chessPiece.getColor() !== currentColor
+      ) {
+        result.push([x + 1, y + 1]);
+      }
+
+      //starting move
+      if (x == 1 && !currentBoard[x + 2][y].chessPiece) {
+        result.push([x + 2, y]);
+      }
+      break;
+    }
+  }
+
+  return result;
+}
