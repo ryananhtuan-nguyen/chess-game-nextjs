@@ -29,6 +29,13 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
   - OOP in typescript
   - Manage complex state with useReducer
 
+## Current issues:
+  - The game logic is not fully implemented yet. Missing:
+    + Check
+    + Checkmate
+    + Castling
+  - More tests to be implemented.
+
 ## What's next? 
 
   - socket.io for real-time update and multi-player.
