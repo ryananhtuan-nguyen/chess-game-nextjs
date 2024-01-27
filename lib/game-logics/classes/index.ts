@@ -34,4 +34,10 @@ export abstract class ChessPiece {
     this.coordinate = cord;
     return this;
   }
+
+  isBeingChecked(currentBoard: ChessTile[][]): boolean {
+    // Default implementation, can be overridden by derived classes
+    console.warn('isBeingChecked method not implemented for this chess piece.');
+    return false;
+  }
 }
