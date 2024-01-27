@@ -46,4 +46,22 @@ export class King extends ChessPiece {
 
     return result;
   }
+
+  isBeingChecked(currentBoard: ChessTile[][]) {
+    const { x, y } = this.coordinate;
+    const allEnemies = [] as ChessPiece[];
+    currentBoard.forEach((rows) => {
+      rows.forEach((tile) => {
+        if (tile.chessPiece && tile.chessPiece.getColor() !== this.color) {
+          allEnemies.push(tile.chessPiece);
+        }
+      });
+    });
+
+    return allEnemies.some((enemy) =>
+      enemy
+        .validMoves(currentBoard)
+        .find((item) => item[0] == x && item[1] == y)
+    );
+  }
 }
