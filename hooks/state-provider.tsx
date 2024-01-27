@@ -114,7 +114,13 @@ const appReducer = (state: BoardUI[][] = initialState, action: Action) => {
           }
 
           //not moving, but un-highlight tile
-          return { ...tile, isCurrentPossible: false, isChecked: false };
+          return {
+            ...tile,
+            isCurrentPossible: false,
+            isChecked: tile.chessPiece?.isBeingChecked(
+              action.payload.currentBoard
+            ),
+          };
         })
       );
     }
