@@ -7,6 +7,7 @@ import { Dispatch, createContext, useContext, useReducer } from 'react';
 
 export interface BoardUI extends ChessTileWithColor {
   isCurrentPossible: boolean;
+  isChecked?: boolean;
 }
 
 type Action =
@@ -44,7 +45,7 @@ const currentAvailable = (id: string, availableMoves: number[][]) => {
 };
 
 const initialState: BoardUI[][] = initialBoard.map((item) =>
-  item.map((tile) => ({ ...tile, isCurrentPossible: false }))
+  item.map((tile) => ({ ...tile, isCurrentPossible: false, isChecked: false }))
 );
 
 const appReducer = (state: BoardUI[][] = initialState, action: Action) => {
@@ -61,6 +62,7 @@ const appReducer = (state: BoardUI[][] = initialState, action: Action) => {
         })
       );
     }
+
     case 'move_chesspiece': {
       //get new id
       const [newX, newY] = action.payload.destinationId.split(' ').map(Number);
@@ -71,32 +73,48 @@ const appReducer = (state: BoardUI[][] = initialState, action: Action) => {
         action.payload.currentBoard
       );
       console.log('Changed coord', action.payload.currentPiece.getCoordinate());
+
       //new state
       return state.map((item) =>
         item.map((tile) => {
+          //
           //set source chesspiece to null
+          //
           if (tile.id == action.payload.currentTileId) {
             return { ...tile, chessPiece: null, isCurrentPossible: false };
           }
+          //
           //remove destination if there is something
+          //
           if (state[newX][newY].chessPiece) {
             state[newX][newY].chessPiece = null;
           }
+          //
           // move chess piece to new tile
+          //
           if (tile.id == action.payload.destinationId) {
-            console.log({
-              ...tile,
-              chessPiece: newPiece,
-              isCurrentPossible: false,
-            });
             return {
               ...tile,
               chessPiece: newPiece,
               isCurrentPossible: false,
             };
           }
+
+          //
+          // check Kings
+          //
+
+          if (tile.chessPiece?.getRole() == 'king') {
+            return {
+              ...tile,
+              isChecked: tile.chessPiece.isBeingChecked(
+                action.payload.currentBoard
+              ),
+            };
+          }
+
           //not moving, but un-highlight tile
-          return { ...tile, isCurrentPossible: false };
+          return { ...tile, isCurrentPossible: false, isChecked: false };
         })
       );
     }
