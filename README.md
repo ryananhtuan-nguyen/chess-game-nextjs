@@ -31,10 +31,8 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ## Current issues:
   - The game logic is not fully implemented yet. Missing:
-    + Check
     + Checkmate
     + Castling
-  - More tests to be implemented.
 
 ## What's next? 
 
