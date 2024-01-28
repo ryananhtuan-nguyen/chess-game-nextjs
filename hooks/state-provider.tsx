@@ -75,7 +75,7 @@ const appReducer = (state: BoardUI[][] = initialState, action: Action) => {
       console.log('Changed coord', action.payload.currentPiece.getCoordinate());
 
       //new state
-      return state.map((item) =>
+      const newBoard = state.map((item) =>
         item.map((tile) => {
           //
           //set source chesspiece to null
@@ -128,6 +128,12 @@ const appReducer = (state: BoardUI[][] = initialState, action: Action) => {
           };
         })
       );
+      return newBoard.map((item) =>
+        item.map((tile) => ({
+          ...tile,
+          isChecked: tile.chessPiece?.isBeingChecked(newBoard),
+        }))
+      );
     }
     case 'pawn_evolve': {
       const [currentX, currentY] = action.payload.currentId
@@ -143,13 +149,19 @@ const appReducer = (state: BoardUI[][] = initialState, action: Action) => {
         action.payload.color
       );
       //set new State
-      return action.payload.currentBoard.map((item) =>
+      const newBoard = action.payload.currentBoard.map((item) =>
         item.map((tile) => {
           if (tile.id === action.payload.currentId) {
             return { ...tile, chessPiece: newPiece };
           }
-          return tile;
+          return { ...tile };
         })
+      );
+      return newBoard.map((item) =>
+        item.map((tile) => ({
+          ...tile,
+          isChecked: tile.chessPiece?.isBeingChecked(newBoard),
+        }))
       );
     }
   }
